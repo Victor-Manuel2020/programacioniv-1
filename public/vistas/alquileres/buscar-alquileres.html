@@ -1,0 +1,41 @@
+<form method="post" id="frm-buscar-alquileres">
+    <div class="card text-white bg-secondary mb-3" style="max-width: 48rem;">
+        <div class="card-header">
+            BUSQUEDA ALQUILERES
+
+            <button type="button" id="btn-close-buscar-alquileres" class="close" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="card-body">
+            <table id="tbl-buscar-alquileres" class="table-striped table-dark table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="3">
+                            <input type="text" v-model="valor" v-on:keyup="buscarAlquileres" placeholder="titulo, nombre o valo" class="form-control">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>PELICULA</th>
+                        <th>CLIENTE</th> 
+                        <th>FECHA PRESTAMO</th>
+                        <th>FECHA DEVOLUCION</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="mi_alquiler in mis_alquileres" :key="mi_alquiler.idAlquiler" v-on:click="modificarAlquiler(mi_alquiler)" >
+                        <td>{{ mi_alquiler.pelicula.label }}</td>
+                        <td>{{ mi_alquiler.cliente.label }}</td>
+                        <td>{{ mi_alquiler.fp }}</td>
+                        <td>{{ mi_alquiler.fd }}</td>
+                        <td>
+                            <input v-on:click="eliminarAlquiler(mi_alquiler.idAlquiler)" type="button" class="btn btn-outline-danger text-white" value="del">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<script src="public/vistas/alquileres/buscar-alquileres.js"></script>

@@ -21,8 +21,8 @@ class alquiler{
         $this->validar_datos();
     }
     private function validar_datos(){
-        if( empty($this->datos['periodo']['id']) ){
-            $this->respuesta['msg'] = 'por favor ingrese el periodo del alquiler';
+        if( empty($this->datos['pelicula']['id']) ){
+            $this->respuesta['msg'] = 'por favor ingrese el pelicula del alquiler';
         }
         if( empty($this->datos['pelicula']['id']) ){
             $this->respuesta['msg'] = 'por favor ingrese la pelicula';
@@ -34,7 +34,7 @@ class alquiler{
             if( $this->datos['accion']==='nuevo' ){
                 $this->db->consultas('
                     INSERT INTO alquileres (idCliente,idPelicula,fechaPrestamo,fechaDevolucion,valor) VALUES(
-                        "'. $this->datos['periodo']['id'] .'",
+                        "'. $this->datos['pelicula']['id'] .'",
                         "'. $this->datos['pelicula']['id'] .'",
                         "'. $this->datos['fechaPrestamo'] .'",
                         "'. $this->datos['fechaDevolucion'] .'",
@@ -45,7 +45,7 @@ class alquiler{
             } else if( $this->datos['accion']==='modificar' ){
                 $this->db->consultas('
                     UPDATE alquileres SET
-                        idCliente     = "'. $this->datos['periodo']['id'] .'",
+                        idCliente     = "'. $this->datos['pelicula']['id'] .'",
                         idPelicula      = "'. $this->datos['pelicula']['id'] .'",
                         fechaPrestamo         = "'. $this->datos['fechaPrestamo'] .'",
                         fechaDevolucion         = "'. $this->datos['fechaDevolucion'] .'",
@@ -55,6 +55,47 @@ class alquiler{
                 $this->respuesta['msg'] = 'Registro actualizado correctamente';
             }
         }
+    }
+    public function buscarAlquiler($valor = ''){
+        if( substr_count($valor, '-')===2 ){
+            $valor = implode('-', array_reverse(explode('-',$valor)));
+        }
+        $this->db->consultas('
+            select alquileres.idAlquiler, alquileres.idPelicula, alquileres.idCliente, 
+                date_format(alquileres.fechaPrestamo,"%d-%m-%Y") AS fechaP, alquileres.fechaPrestamo AS fp,
+                date_format(alquileres.fechaDevolucion,"%d-%m-%Y") AS fechaD, alquileres.fechaDevolucion AS fd,
+                alquileres.valor, 
+                clientes.nombre, clientes.dui,
+                peliculas.titulo, peliculas.genero
+            from alquileres
+                inner join clientes on(clientes.idCliente=alquileres.idCliente)
+                inner join peliculas on(peliculas.idPelicula=alquileres.idPelicula)
+            where clientes.nombre like "%'. $valor .'%" or 
+                peliculas.titulo like "%'. $valor .'%" or 
+                alquileres.fechaPrestamo like "%'. $valor .'%"
+
+        ');
+        $alquileres = $this->respuesta = $this->db->obtener_data();
+        foreach ($alquileres as $key => $value) {
+            $datos[] = [
+                'idAlquiler' => $value['idAlquiler'],
+                'cliente'      => [
+                    'id'      => $value['idCliente'],
+                    'label'   => $value['nombre']
+                ],
+                'pelicula'      => [
+                    'id'      => $value['idPelicula'],
+                    'label'   => $value['pelicula']
+                ],
+                'fechaP'       => $value['fp'],
+                'fp'           => $value['fechaP']
+                ,
+                'fechaD'       => $value['fd'],
+                'fd'           => $value['fechaD']
+
+            ]; 
+        }
+        return $this->respuesta = $datos;
     }
     public function traer_clientes_peliculas(){
         $this->db->consultas('
