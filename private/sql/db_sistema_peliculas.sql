@@ -42,6 +42,7 @@ CREATE TABLE `clientes` (
 
 CREATE TABLE `peliculas` (
   `idPelicula` int(10) NOT NULL,
+  `titulo` COLLATE utf8_spanish_ci CHAR(65) NOT NULL,
   `descripcion` char(250) COLLATE utf8_spanish_ci NOT NULL,
   `sinopsis` char(100) COLLATE utf8_spanish_ci NOT NULL,
   `genero` char(50) COLLATE utf8_spanish_ci NOT NULL,
@@ -57,8 +58,8 @@ CREATE TABLE `peliculas` (
 --
 ALTER TABLE `alquiler`
   ADD PRIMARY KEY (`idAlquiler`),
-  ADD KEY `FK_ClientesAlquiler` (`idCliente`),
-  ADD KEY `FK_PeliculasAlquiler` (`idPelicula`);
+  ADD KEY `idCliente` (`idCliente`),
+  ADD KEY `idPelicula` (`idPelicula`);
 
 --
 -- Indices de la tabla `clientes`

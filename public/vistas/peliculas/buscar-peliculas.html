@@ -12,11 +12,12 @@
                 <thead>
                     <tr>
                         <th colspan="5">
-                            <input type="text" v-model="valor" v-on:keyup="buscarPelicula" placeholder="descripcion o sipnosi o genero"
+                            <input type="text" v-model="valor" v-on:keyup="buscarPelicula" placeholder="titulo o sipnosi o genero"
                                 class="form-control">
                         </th>
                     </tr>
                     <tr>
+                        <th>TITULO</th>
                         <th>DESCRIPCION</th>
                         <th>SINOPSIS</th>
                         <th>GENERO</th>
@@ -27,6 +28,7 @@
                 <tbody>
                     <tr v-for="movie in mispeliculas" :key="movie.idPelicula"
                         v-on:click="modificarPelicula(movie)">
+                        <td>{{ movie.titulo }}</td>
                         <td>{{ movie.descripcion }}</td>
                         <td>{{ movie.sinopsis }}</td>
                         <td>{{ movie.genero }}</td>
